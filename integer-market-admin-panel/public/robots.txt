@@ -1,0 +1,59 @@
+# --- General: Allow all crawlers ---
+User-agent: *
+Allow: /
+Disallow:
+ 
+# --- Google Search ---
+User-agent: Googlebot
+Allow: /
+ 
+# --- Google AI (Gemini, AI Overviews) ---
+User-agent: Google-Extended
+Allow: /
+ 
+# --- Bing / Microsoft Copilot ---
+User-agent: Bingbot
+Allow: /
+ 
+User-agent: msnbot
+Allow: /
+ 
+# --- ChatGPT / OpenAI ---
+User-agent: GPTBot
+Allow: /
+ 
+User-agent: ChatGPT-User
+Allow: /
+ 
+User-agent: OAI-SearchBot
+Allow: /
+ 
+# --- Claude / Anthropic ---
+User-agent: ClaudeBot
+Allow: /
+ 
+User-agent: anthropic-ai
+Allow: /
+ 
+# --- Perplexity AI ---
+User-agent: PerplexityBot
+Allow: /
+ 
+# --- Meta AI ---
+User-agent: FacebookBot
+Allow: /
+ 
+# --- Apple / Siri ---
+User-agent: Applebot
+Allow: /
+ 
+# --- You.com AI ---
+User-agent: YouBot
+Allow: /
+ 
+# --- Cohere AI ---
+User-agent: cohere-ai
+Allow: /
+ 
+
+Sitemap: https://www.integermarket.com/sitemap.xml

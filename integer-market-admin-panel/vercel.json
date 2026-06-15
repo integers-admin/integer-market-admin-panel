@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://admin-panel.integermarket.com/sitemap.xml"
+    },
+
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
