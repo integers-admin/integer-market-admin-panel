@@ -45,7 +45,7 @@ const Login = () => {
 
             if (data.success) {
                 localStorage.setItem("n@xIIktKQXeorj.W*XF5tFrKl", JSON.stringify(data));
-                navigate("/dash");
+                navigate("/");
                 toast.success(data.message);
             }
             else {

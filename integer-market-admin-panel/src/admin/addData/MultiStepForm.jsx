@@ -196,8 +196,6 @@ const MultiStepForm = () => {
 
       const method = hasExistingId ? "PUT" : "POST";
 
-      console.log("method: ", method);
-
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -529,8 +527,6 @@ const MultiStepForm = () => {
           },
         );
 
-        console.log("res: ", res);
-
         if (!res.ok) {
           toast.error("Failed to save draft");
           return;
@@ -706,11 +702,6 @@ const MultiStepForm = () => {
 
   const getAvailableReportsSample = async () => {
     try {
-      // const res = await fetch(`${base_url}/report-assets/?report_version_id=${versionID}`, {
-      //     method: "GET",
-      //     credentials: "include"
-      // });
-
       const res = await fetch(
         `${base_url}/report-assets/sample-pdfs?report_version_id=${versionID}`,
         {
@@ -801,6 +792,8 @@ const MultiStepForm = () => {
         setPublishDate(stp1?.publish_date || "");
         setCoveragePeriodFrom(stp1?.coverage_start_year || "");
         setCoveragePeriodTo(stp1?.coverage_end_year || "");
+        setCagr(stp1?.cagr || "");
+        setMarketSize(stp1?.market_size || "");
       }
       if (data?.step_data?.step2) {
         let stp2 = data?.step_data?.step2;
