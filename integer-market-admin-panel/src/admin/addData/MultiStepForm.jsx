@@ -245,11 +245,6 @@ const MultiStepForm = () => {
 
       const data = await res.json();
 
-      console.log("method: ", method);
-
-      console.log("res.status: ", res.status);
-      console.log("data: ", data);
-
       if (!hasExistingId && data?.report_id) {
         setDraftId(data.report_id);
       }
@@ -442,8 +437,6 @@ const MultiStepForm = () => {
       //   //     return;
       //   // }
       //   // setError(false);
-
-      //   console.log("faqData in payload: ", faqData);
 
       //   const payload = {
       //     amount_cents: Number(reportPrice),
@@ -855,8 +848,6 @@ const MultiStepForm = () => {
       }
 
       let data = await result.json();
-
-      console.log("getData: ", data);
 
       if (data?.report_id) {
         setDraftId(data.report_id);
