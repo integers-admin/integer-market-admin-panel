@@ -50,8 +50,8 @@ const AllReports = () => {
         setReportsData(data.reports);
       }
     } catch (err) {
-      toast.error(err.message);
-      console.log("something went wrong...");
+      toast.error(err?.message || "something went wrong...");
+      console.log("something went wrong...",err);
     } finally {
       setLoading(false);
     }

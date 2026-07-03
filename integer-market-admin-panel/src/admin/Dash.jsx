@@ -21,6 +21,7 @@ const Dash = () => {
   const getDraftData = async () => {
     try {
       setLoading1(true);
+      
       let result = await fetch(`${base_url}/reports/my-drafts`, {
         method: "GET",
         credentials: "include",

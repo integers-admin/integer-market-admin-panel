@@ -66,6 +66,23 @@ const MultiStepForm = () => {
   // formstep5 state
   const [reportPrice, setReportPrice] = useState("");
 
+  const [faqData, setFaqData] = useState({
+    faqQue1: "",
+    faqAns1: "",
+    faqQue2: "",
+    faqAns2: "",
+    faqQue3: "",
+    faqAns3: "",
+    faqQue4: "",
+    faqAns4: "",
+    faqQue5: "",
+    faqAns5: "",
+  });
+
+  const handleFaqChange = (event) => {
+    setFaqData({ ...faqData, [event.target.name]: event.target.value });
+  };
+
   // formstep6 state
   const [status, setStatus] = useState("");
   const [fHomepage, setFHomepage] = useState(null);
@@ -203,13 +220,35 @@ const MultiStepForm = () => {
         credentials: "include",
       });
 
+      // if (!res.ok) {
+      //   const errorData = await res.json();
+
+      //   if (Array.isArray(errorData.detail)) {
+      //     toast.error(errorData.detail[0].msg);
+      //   } else {
+      //     toast.error(errorData.detail);
+      //   }
+      //   return { success: false };
+      // }
+
       if (!res.ok) {
         const errorData = await res.json();
-        toast.error(errorData?.detail);
+
+        if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
+          toast.error(errorData.detail[0].msg);
+        } else {
+          toast.error(errorData.detail || "Something went wrong");
+        }
+
         return { success: false };
       }
 
       const data = await res.json();
+
+      console.log("method: ", method);
+
+      console.log("res.status: ", res.status);
+      console.log("data: ", data);
 
       if (!hasExistingId && data?.report_id) {
         setDraftId(data.report_id);
@@ -265,7 +304,7 @@ const MultiStepForm = () => {
           version_id: versionID,
           coverage_start_year: Number(coveragePeriodFrom),
           coverage_end_year: Number(coveragePeriodTo),
-          publish_date: publishDate,
+          publish_date: publishDate || new Date().toISOString().split("T")[0],
           cagr: Number(cagr),
           market_size: marketSize,
         };
@@ -397,22 +436,52 @@ const MultiStepForm = () => {
         // No validation needed for step 4
       }
 
+      // if (formStep === 5) {
+      //   // if (!reportPrice || isNaN(reportPrice) || Number(reportPrice) <= 0) {
+      //   //     setError(true);
+      //   //     return;
+      //   // }
+      //   // setError(false);
+
+      //   console.log("faqData in payload: ", faqData);
+
+      //   const payload = {
+      //     amount_cents: Number(reportPrice),
+      //     download_allowed: true,
+      //     online_viewing_allowed: true,
+      //   };
+
+      //   // await saveStepData({ step: 4, payload });
+
+      //   const result = await saveStepData({ step: 4, payload });
+
+      //   if (!result?.success) {
+      //     return;
+      //   }
+      // }
+
       if (formStep === 5) {
-        // if (!reportPrice || isNaN(reportPrice) || Number(reportPrice) <= 0) {
-        //     setError(true);
-        //     return;
-        // }
-        // setError(false);
+        const faqs = [];
+
+        for (let i = 1; i <= 5; i++) {
+          faqs.push({
+            question: faqData[`faqQue${i}`],
+            answer: faqData[`faqAns${i}`],
+          });
+        }
 
         const payload = {
+          currency: "USD",
           amount_cents: Number(reportPrice),
           download_allowed: true,
           online_viewing_allowed: true,
+          faqs,
         };
 
-        // await saveStepData({ step: 4, payload });
-
-        const result = await saveStepData({ step: 4, payload });
+        const result = await saveStepData({
+          step: 4,
+          payload,
+        });
 
         if (!result?.success) {
           return;
@@ -483,9 +552,11 @@ const MultiStepForm = () => {
           version_id: versionID || "",
           coverage_start_year: Number(coveragePeriodFrom) || 0,
           coverage_end_year: Number(coveragePeriodTo) || 0,
-          publish_date: publishDate || "",
+          publish_date: publishDate || new Date().toISOString().split("T")[0],
           cagr: Number(cagr),
           market_size: marketSize,
+          ai_report_id: "",
+          report_unique_id: "",
         };
         // await saveStepData({ step: 1, payload });
 
@@ -535,10 +606,21 @@ const MultiStepForm = () => {
         const data = await res.json();
         // toast.success("Draft saved successfully!");
       } else if (formStep === 5) {
+        const faqs = [];
+
+        for (let i = 1; i <= 5; i++) {
+          faqs.push({
+            question: faqData[`faqQue${i}`],
+            answer: faqData[`faqAns${i}`],
+          });
+        }
+
         const payload = {
+          currency: "USD",
           amount_cents: Number(reportPrice) || 0,
           download_allowed: true,
           online_viewing_allowed: true,
+          faqs,
         };
         // await saveStepData({ step: 4, payload });
 
@@ -774,6 +856,8 @@ const MultiStepForm = () => {
 
       let data = await result.json();
 
+      console.log("getData: ", data);
+
       if (data?.report_id) {
         setDraftId(data.report_id);
       }
@@ -817,6 +901,28 @@ const MultiStepForm = () => {
       if (data?.step_data?.step4) {
         let stp4 = data?.step_data?.step4;
         setReportPrice(stp4?.amount_cents || "");
+
+        const updatedFaqData = {
+          faqQue1: "",
+          faqAns1: "",
+          faqQue2: "",
+          faqAns2: "",
+          faqQue3: "",
+          faqAns3: "",
+          faqQue4: "",
+          faqAns4: "",
+          faqQue5: "",
+          faqAns5: "",
+        };
+
+        stp4?.faqs?.forEach((faq, index) => {
+          updatedFaqData[`faqQue${index + 1}`] = faq.question;
+          updatedFaqData[`faqAns${index + 1}`] = faq.answer;
+        });
+
+        // console.log("updatedFaqData: ",updatedFaqData);
+
+        setFaqData(updatedFaqData);
       }
       if (data?.step_data?.step5) {
         let stp5 = data?.step_data?.step5;
@@ -943,6 +1049,8 @@ const MultiStepForm = () => {
               reportPrice={reportPrice}
               setReportPrice={setReportPrice}
               error={error}
+              faqData={faqData}
+              handleFaqChange={handleFaqChange}
             />
           )}
           {formStep === 6 && (
